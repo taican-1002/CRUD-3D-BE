@@ -12,7 +12,11 @@ var fs = require("fs-extra");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
