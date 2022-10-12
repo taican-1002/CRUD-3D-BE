@@ -13,7 +13,8 @@
     "multiple",
     "files",
     "images",
-    "mongodb"
+    "mongodb",
+    "heroku"
   ],
   "author": "bezkoder",
   "license": "ISC",
