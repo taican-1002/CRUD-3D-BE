@@ -49,9 +49,9 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-// app.get("/", (req, res) => {
-//   res.render("index");
-// });
+app.get("/", (req, res) => {
+  res.send("hello world");
+});
 
 // //single file
 // app.post("/uploadfile", upload.single("myFile"), (req, res, next) => {
