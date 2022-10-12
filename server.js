@@ -4,12 +4,12 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 var cors = require("cors");
 const PORT = process.env.PORT || 8080;
-const faceController = require("./face.controller");
-const imageController = require("./image.controller");
-const conn = require("./database");
+const faceController = require("./src/face.controller");
+const imageController = require("./src/image.controller");
+const conn = require("./src/database");
 const path = require("path");
 var fs = require("fs-extra");
-
+require("dotenv").config();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
