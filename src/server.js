@@ -112,6 +112,11 @@ app.delete("/image/files/:id", imageController.remove);
 //END IMAGE
 
 //Code to start server
-app.listen(PORT, function () {
+let server = app.listen(PORT, function () {
   console.log(`Server Started at PORT ${PORT}`);
+});
+
+server.on("clientError", (err, socket) => {
+  console.error(err);
+  socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
 });
