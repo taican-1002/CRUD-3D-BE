@@ -1,6 +1,8 @@
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/mindar", {
+mongoose.connect(process.env.DB_CONNECT, {
+  useUnifiedTopology: true,
   useNewUrlParser: true,
+  useCreateIndex: true,
 });
 var conn = mongoose.connection;
 conn.on("connected", function () {

@@ -9,7 +9,9 @@ const imageController = require("./src/image.controller");
 const conn = require("./src/database");
 const path = require("path");
 var fs = require("fs-extra");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
@@ -17,7 +19,6 @@ app.use(
     origin: "*",
   })
 );
-
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // SET STORAGE
