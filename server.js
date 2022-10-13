@@ -6,10 +6,12 @@ var cors = require("cors");
 const PORT = process.env.PORT || 8080;
 const faceController = require("./src/face.controller");
 const imageController = require("./src/image.controller");
-const conn = require("./src/database");
 const path = require("path");
 var fs = require("fs-extra");
+var mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const Face = require("./src/face.model");
+
 dotenv.config();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,7 +21,19 @@ app.use(
     origin: "*",
   })
 );
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "src/uploads/")));
+
+mongoose.connect(process.env.DB_CONNECT + "/mindar", {
+  useNewUrlParser: true,
+});
+var conn = mongoose.connection;
+conn.on("connected", function () {
+  console.log("database is connected successfully");
+});
+conn.on("disconnected", function () {
+  console.log("database is disconnected successfully");
+});
+conn.on("error", console.error.bind(console, "connection error:"));
 
 // SET STORAGE
 var storage = multer.diskStorage({
@@ -69,6 +83,8 @@ app.get("/", (req, res) => {
 // });
 
 //START FACE
+//get all file
+app.get("/face/files", faceController.getAll);
 //get file
 app.get("/face/files/:page", faceController.get);
 //multiple file
@@ -87,7 +103,7 @@ app.post(
   faceController.create
 );
 //delete file
-app.delete("/face/files/:id", imageController.remove);
+app.delete("/face/files/:id", faceController.remove);
 //END FACE
 
 //START IMAGE
@@ -113,11 +129,6 @@ app.delete("/image/files/:id", imageController.remove);
 //END IMAGE
 
 //Code to start server
-let server = app.listen(PORT, function () {
+app.listen(PORT, function () {
   console.log(`Server Started at PORT ${PORT}`);
-});
-
-server.on("clientError", (err, socket) => {
-  console.error(err);
-  socket.end("HTTP/1.1 400 Bad Request\r\n\r\n");
 });

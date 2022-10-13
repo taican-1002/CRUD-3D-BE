@@ -53,6 +53,7 @@ const create = (req, res) => {
 const remove = async (req, res) => {
   const id = req.params.id;
   const directoryPath = path.join(__dirname).replace("src", "");
+
   var fileItem = await Image.find({ id: id })
     .then((file) => Object.assign({}, file))
     .catch((err) => {

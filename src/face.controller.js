@@ -2,11 +2,20 @@ const fs = require("fs");
 var path = require("path");
 const Face = require("./face.model");
 var rimraf = require("rimraf");
+const getAll = (req, res, next) => {
+  Face.find().exec((err, data) => {
+    Face.countDocuments((err) => {
+      if (err) return next(err);
+      res.send({
+        data,
+      });
+    });
+  });
+};
 
 const get = (req, res, next) => {
   let perPage = 10;
   let page = req.params.page || 1;
-
   Face.find()
     .skip(perPage * page - perPage)
     .limit(perPage)
@@ -41,7 +50,6 @@ const create = (req, res) => {
     avatar: req.files.avatar[0],
     fileList: req.files.myFiles,
   });
-
   return face
     .save()
     .then((newFile) => {
@@ -85,9 +93,9 @@ const remove = async (req, res) => {
       })
     );
   for (let i = 0; i < fileItem[0].fileList.length; i++) {
-    fs.unlink(directoryPath + fileItem[0].fileList[i].path, (err) => {
-      if (err) throw err;
-    });
+    // fs.unlink(directoryPath + fileItem[0].fileList[i].path, (err) => {
+    //   if (err) throw err;
+    // });
 
     const dir = directoryPath + fileItem[0].fileList[i].destination;
     // delete directory recursively
@@ -128,6 +136,7 @@ const remove = async (req, res) => {
 // };
 
 module.exports = {
+  getAll,
   get,
   create,
   remove,
