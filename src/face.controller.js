@@ -2,6 +2,7 @@ const fs = require("fs");
 var path = require("path");
 const Face = require("./face.model");
 var rimraf = require("rimraf");
+
 const getAll = (req, res, next) => {
   Face.find().exec((err, data) => {
     Face.countDocuments((err) => {
@@ -93,6 +94,7 @@ const remove = async (req, res) => {
       })
     );
   for (let i = 0; i < fileItem[0].fileList.length; i++) {
+    //delete file
     // fs.unlink(directoryPath + fileItem[0].fileList[i].path, (err) => {
     //   if (err) throw err;
     // });

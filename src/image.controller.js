@@ -3,6 +3,17 @@ var path = require("path");
 const Image = require("./image.model");
 var rimraf = require("rimraf");
 
+const getAll = (req, res, next) => {
+  Image.find().exec((err, data) => {
+    Image.countDocuments((err) => {
+      if (err) return next(err);
+      res.send({
+        data,
+      });
+    });
+  });
+};
+
 const get = (req, res, next) => {
   let perPage = 10;
   let page = req.params.page || 1;
@@ -26,7 +37,17 @@ const get = (req, res, next) => {
 const create = (req, res) => {
   const image = new Image({
     id: req.body.id,
+    idImage: req.body.idImage,
     name: req.body.name,
+    scaleX: req.body.scaleX,
+    scaleY: req.body.scaleY,
+    scaleZ: req.body.scaleZ,
+    positionX: req.body.positionX,
+    positionY: req.body.positionY,
+    positionZ: req.body.positionZ,
+    rotationX: req.body.rotationX,
+    rotationY: req.body.rotationY,
+    rotationZ: req.body.rotationZ,
     image: req.files.image[0],
     fileList: req.files.myFiles,
   });
@@ -74,9 +95,9 @@ const remove = async (req, res) => {
       })
     );
   for (let i = 0; i < fileItem[0].fileList.length; i++) {
-    fs.unlink(directoryPath + fileItem[0].fileList[i].path, (err) => {
-      if (err) throw err;
-    });
+    // fs.unlink(directoryPath + fileItem[0].fileList[i].path, (err) => {
+    //   if (err) throw err;
+    // });
 
     const dir = directoryPath + fileItem[0].fileList[i].destination;
     // delete directory recursively
@@ -117,6 +138,7 @@ const remove = async (req, res) => {
 // };
 
 module.exports = {
+  getAll,
   get,
   create,
   remove,
