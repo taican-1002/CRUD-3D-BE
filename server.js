@@ -110,6 +110,21 @@ app.post(
   ]),
   faceController.create
 );
+//update
+app.put(
+  "/face/files/:id",
+  upload.fields([
+    {
+      name: "fileList",
+      maxCount: 15,
+    },
+    {
+      name: "avatar",
+      maxCount: 1,
+    },
+  ]),
+  faceController.update
+);
 //delete file
 app.delete("/face/files/:id", faceController.remove);
 //END FACE
@@ -133,6 +148,21 @@ app.post(
     },
   ]),
   imageController.create
+);
+//update
+app.put(
+  "/image/files/:id",
+  upload.fields([
+    {
+      name: "fileList",
+      maxCount: 15,
+    },
+    {
+      name: "image",
+      maxCount: 1,
+    },
+  ]),
+  imageController.update
 );
 //delete file
 app.delete("/image/files/:id", imageController.remove);
@@ -158,6 +188,8 @@ app.get("/video/files", videoController.getAll);
 app.get("/video/files/:page", videoController.get);
 //create
 app.post("/video/files", upload.single("video"), videoController.create);
+//update
+app.put("/video/files/:id", upload.single("video"), videoController.update);
 //delete file
 app.delete("/video/files/:id", videoController.remove);
 //END VIDEO

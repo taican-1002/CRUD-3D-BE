@@ -59,6 +59,32 @@ const create = (req, res) => {
     });
 };
 
+const update = async (req, res) => {
+  if (!req.body) {
+    return res.status(400).send({
+      message: "Data to update can not be empty!",
+    });
+  }
+  try {
+    const id = req.params.id;
+    const updatedData = {
+      id: req.body.id,
+      name: req.body.name,
+      video: req.file ? req.file : JSON.parse(req.body.video),
+    };
+    const options = { new: true };
+
+    const result = await Video.findByIdAndUpdate(id, updatedData, options);
+
+    res.send({
+      data: result,
+      message: "Successfully updated",
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const remove = async (req, res) => {
   const id = req.params.id;
   const directoryPath = path.join(__dirname).replace("src", "");
@@ -110,6 +136,7 @@ module.exports = {
   getAll,
   get,
   create,
+  update,
   remove,
   // removeSync,
 };

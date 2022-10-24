@@ -71,6 +71,54 @@ const create = (req, res) => {
     });
 };
 
+const update = async (req, res) => {
+  let fileList = [];
+  if (!req.body) {
+    return res.status(400).send({
+      message: "Data to update can not be empty!",
+    });
+  }
+
+  if (!req.body.fileList) {
+    for (let i = 0; i < req.files.fileList.length; i++) {
+      fileList.push(req.files.fileList[i]);
+    }
+  } else {
+    for (let i = 0; i < req.body.fileList.length; i++) {
+      fileList.push(JSON.parse(req.body.fileList[i]));
+    }
+  }
+  try {
+    const id = req.params.id;
+    const updatedData = {
+      id: req.body.id,
+      name: req.body.name,
+      index: req.body.index,
+      scaleX: req.body.scaleX,
+      scaleY: req.body.scaleY,
+      scaleZ: req.body.scaleZ,
+      positionX: req.body.positionX,
+      positionY: req.body.positionY,
+      positionZ: req.body.positionZ,
+      rotationX: req.body.rotationX,
+      rotationY: req.body.rotationY,
+      rotationZ: req.body.rotationZ,
+      image: req.files.image ? req.files.image[0] : JSON.parse(req.body.image),
+      fileList: fileList,
+    };
+    const options = { new: true };
+
+    const result = await Image.findByIdAndUpdate(id, updatedData, options);
+
+    res.send({
+      data: result,
+      message: "Successfully updated",
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const remove = async (req, res) => {
   const id = req.params.id;
   const directoryPath = path.join(__dirname).replace("src", "");
@@ -120,27 +168,11 @@ const remove = async (req, res) => {
   }
 };
 
-// const removeSync = (req, res) => {
-//   const fileName = req.params.name;
-//   const directoryPath = path.join(__dirname, "uploads");
-
-//   try {
-//     fs.unlinkSync(directoryPath + fileName);
-
-//     res.status(200).send({
-//       message: "File is deleted.",
-//     });
-//   } catch (err) {
-//     res.status(500).send({
-//       message: "Could not delete the file. " + err,
-//     });
-//   }
-// };
-
 module.exports = {
   getAll,
   get,
   create,
+  update,
   remove,
   // removeSync,
 };
